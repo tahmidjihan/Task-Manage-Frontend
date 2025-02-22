@@ -1,42 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import Category from './components/Category';
 import { DragDropContext } from '@hello-pangea/dnd';
+import useTasks from './tasks';
 
 function App() {
   const [count, setCount] = useState(0);
+  const { tasks, setTasks } = useTasks();
 
-  const [tasks, setTasks] = useState({
-    'Category 1': ['Task 1', 'Task 2', 'Task 3'],
-    'Category 2': ['Task 4', 'Task 5', 'Task 6'],
-    'Category 3': ['Task 7', 'Task 8', 'Task 9'],
-  });
   function handleDragEnd(result) {
     if (!result.destination) return;
+
     const { source, destination } = result;
-    if (source.droppableId === destination.droppableId) {
-      const updatedTasks = [...tasks[source.droppableId]];
-      const [movedTask] = updatedTasks.splice(source.index, 1);
-      updatedTasks.splice(destination.index, 0, movedTask);
+    const sourceCategory = source.droppableId;
+    const destinationCategory = destination.droppableId;
 
-      setTasks((prev) => ({
-        ...prev,
-        [source.droppableId]: updatedTasks,
-      }));
-    } else {
-      const sourceTasks = [...tasks[source.droppableId]];
-      const destinationTasks = [...tasks[destination.droppableId]];
-      const [movedTask] = sourceTasks.splice(source.index, 1);
-      destinationTasks.splice(destination.index, 0, movedTask);
+    // Convert tasks object to an array to reorder
+    const sourceTasksArray = Object.entries(tasks[sourceCategory]);
+    const destinationTasksArray = Object.entries(tasks[destinationCategory]);
 
-      setTasks((prev) => ({
-        ...prev,
-        [source.droppableId]: sourceTasks,
-        [destination.droppableId]: destinationTasks,
-      }));
-    }
+    const [movedTask] = sourceTasksArray.splice(source.index, 1); // Remove from source
+    destinationTasksArray.splice(destination.index, 0, movedTask); // Insert into destination
+
+    setTasks((prev) => ({
+      ...prev,
+      [sourceCategory]: Object.fromEntries(sourceTasksArray),
+      [destinationCategory]: Object.fromEntries(destinationTasksArray),
+    }));
   }
+
+  // useEffect(() => {
+  //   console.log(tasks);
+  // }, [tasks]);
   return (
     <>
       <div>
@@ -46,7 +42,7 @@ function App() {
           </h1>
           <div className='hero-content min-w-screen text-center z-10 py-20'>
             <DragDropContext onDragEnd={handleDragEnd}>
-              <div className=' grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+              <div className=' flex flex-wrap mx-auto lg:px-12 justify-center gap-4 items-start'>
                 {Object.keys(tasks).map((category) => (
                   <Category
                     key={category}
