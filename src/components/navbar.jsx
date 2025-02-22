@@ -1,17 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { authContext } from '../AuthProvider';
 
 function Navbar() {
+  const { user } = useContext(authContext);
   function Menu() {
-    return (
-      <>
-        <li>
-          <a>Item 1</a>
-        </li>
-        <li>
-          <a>Item 3</a>
-        </li>
-      </>
-    );
+    return <></>;
   }
   return (
     <div className='navbar bg-base-100 shadow-sm fixed top z-50'>
@@ -39,7 +32,7 @@ function Navbar() {
             <Menu />
           </ul>
         </div>
-        <a className='btn btn-ghost text-xl'>daisyUI</a>
+        <a className='btn btn-ghost text-xl'>Task Manager</a>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal px-1'>
@@ -47,7 +40,7 @@ function Navbar() {
         </ul>
       </div>
       <div className='navbar-end'>
-        <a className='btn'>Button</a>
+        <a className='btn'>{user?.displayName}</a>
       </div>
     </div>
   );
