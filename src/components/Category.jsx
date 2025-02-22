@@ -1,6 +1,8 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import useTasks from '../tasks';
+import { FaBars } from 'react-icons/fa';
+import AddTask from './addTask';
 
 function Category({ categoryTitle, titles }) {
   const { tasks, setTasks } = useTasks();
@@ -20,7 +22,15 @@ function Category({ categoryTitle, titles }) {
   return (
     <div className='card bg-base-100 w-xs shadow-sm'>
       <div className='card-body border-t-8 border-primary rounded-xl'>
-        <h2 className='card-title'>{categoryTitle}</h2>
+        <div className='flex justify-between'>
+          <h2 className='card-title'>{categoryTitle}</h2>
+          <AddTask
+            text='Add Task'
+            isEdit={false}
+            className='btn btn-primary btn-xs'>
+            Add Task
+          </AddTask>
+        </div>
         <hr />
         <Droppable droppableId={categoryTitle}>
           {(provided) => (
@@ -38,73 +48,29 @@ function Category({ categoryTitle, titles }) {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       className='bg-base-200 p-2 my-2 rounded-sm relative'>
-                      <p
-                        className={`text-xs text-start ${
-                          titles[title][3] === 'done'
-                            ? 'text-success'
-                            : titles[title][3] === 'progress'
-                            ? 'text-warning'
-                            : 'text-error'
-                        } rounded-sm pt-2`}>
-                        In {titles[title][3]}
-                      </p>
-                      <label className='fieldset-label text-start'>
-                        <input
-                          type='checkbox'
-                          className='checkbox'
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              titles[title][0] = true;
-                              titles[title][1];
-                              titles[title][2];
-                              titles[title][3] = 'done';
-                              setTasks((prevTasks) => ({
-                                ...prevTasks,
-                                [categoryTitle]: {
-                                  ...prevTasks[categoryTitle],
-                                  [title]: [
-                                    true,
-                                    ...titles[title][1],
-                                    ...titles[title][2],
-                                    'done',
-                                  ],
-                                },
-                              }));
-                              // console.log(titles[title]);
-                            } else {
-                              titles[title][0] = false;
-                              titles[title][1];
-                              titles[title][2];
-                              titles[title][3] = 'todo';
-                              setTasks((prevTasks) => ({
-                                ...prevTasks,
-                                [categoryTitle]: {
-                                  ...prevTasks[categoryTitle],
-                                  [title]: [
-                                    false,
-                                    ...titles[title][1],
-                                    ...titles[title][2],
-                                    'todo',
-                                  ],
-                                },
-                              }));
-                              // console.log(titles[title]);
-                            }
-                          }}
-                          {...(titles[title][0]
-                            ? { defaultChecked: true }
-                            : {})}
-                        />
-
+                      <div>
+                        <div className='flex gap-2 flex-wrap'>
+                          <AddTask
+                            text='Edit'
+                            isEdit
+                            className='btn btn-primary btn-xs'>
+                            Edit
+                          </AddTask>
+                          <button className='btn btn-error btn-xs'>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <label className='fieldset-label text-start text-xs my-2 text-white'>
                         {title}
                       </label>
-
-                      <p className='text-xs text-start my-[2px]'>
-                        {titles[title][1]}
+                      <hr />
+                      <p className='text-xs text-start my-[2px] text-gray-500'>
+                        {titles[title][0]}
                       </p>
 
-                      <p className='rounded-full text-start text-xs badge badge-xs badge-accent badge-outline'>
-                        {titles[title][2]}
+                      <p className='rounded-full text-start text-xs badge badge-xs badge-primary w-full my-2 badge-outline'>
+                        Created : {titles[title][1]}
                       </p>
                     </div>
                   )}

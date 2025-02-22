@@ -10,18 +10,20 @@ function App() {
   const { tasks, setTasks } = useTasks();
 
   function handleDragEnd(result) {
-    if (!result.destination) return;
+    // if (!result.destination) return;
 
     const { source, destination } = result;
     const sourceCategory = source.droppableId;
+    // console.log(sourceCategory);
     const destinationCategory = destination.droppableId;
+    // console.log(destinationCategory);
 
     // Convert tasks object to an array to reorder
     const sourceTasksArray = Object.entries(tasks[sourceCategory]);
     const destinationTasksArray = Object.entries(tasks[destinationCategory]);
 
-    const [movedTask] = sourceTasksArray.splice(source.index, 1); // Remove from source
-    destinationTasksArray.splice(destination.index, 0, movedTask); // Insert into destination
+    const [movedTask] = sourceTasksArray.splice(source.index, 1);
+    destinationTasksArray.splice(destination.index, 0, movedTask);
 
     setTasks((prev) => ({
       ...prev,
@@ -42,7 +44,7 @@ function App() {
           </h1>
           <div className='hero-content min-w-screen text-center z-10 py-20'>
             <DragDropContext onDragEnd={handleDragEnd}>
-              <div className=' flex flex-wrap mx-auto lg:px-12 justify-center gap-4 items-start'>
+              <div className=' flex flex-wrap mx-auto lg:px-12 gap-4 items-start'>
                 {Object.keys(tasks).map((category) => (
                   <Category
                     key={category}
