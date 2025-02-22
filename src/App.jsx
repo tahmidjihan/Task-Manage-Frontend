@@ -60,7 +60,7 @@ function App() {
           <div className='hero-content min-w-screen text-center z-10 py-20 flex flex-col items-center justify-center mx-auto container'>
             <DragDropContext onDragEnd={handleDragEnd}>
               <div className=' flex flex-wrap gap-4 items-center justify-center'>
-                {Object.keys(tasks).map((category) => (
+                {Object?.keys(tasks).map((category) => (
                   <Category
                     className='mx-auto sm:mx-0'
                     key={category}

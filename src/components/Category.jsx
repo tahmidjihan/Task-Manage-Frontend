@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import useTasks from '../tasks';
 import { FaBars } from 'react-icons/fa';
 import AddTask from './addTask';
+import axios from 'axios';
 
 function Category({ categoryTitle, className }) {
   const { tasks, setTasks } = useTasks();
@@ -50,11 +51,18 @@ function Category({ categoryTitle, className }) {
                             title={task}
                             description={task.description}
                             category={categoryTitle}
+                            // _id={task.id}
                             isEdit
                             className='btn btn-primary btn-xs'>
                             Edit
                           </AddTask>
-                          <button className='btn btn-error btn-xs'>
+                          <button
+                            onClick={() => {
+                              axios.delete(
+                                `https://backend14.vercel.app/DELETE/tasks/${task._id}`
+                              );
+                            }}
+                            className='btn btn-error btn-xs'>
                             Delete
                           </button>
                         </div>

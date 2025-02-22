@@ -24,7 +24,7 @@ function AuthProvider({ children }) {
       (user) => {
         setUser(user);
         if (user) {
-          axios.put('http://localhost:3000/users', user);
+          axios.put('https://backend14.vercel.app/users', user);
         }
       },
       [user]

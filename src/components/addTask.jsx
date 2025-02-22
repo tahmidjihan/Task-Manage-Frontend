@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import useTasks from '../tasks';
 import axios from 'axios';
+import { authContext } from '../AuthProvider';
 
 function AddTask({
   className,
@@ -11,6 +12,7 @@ function AddTask({
   category = '',
 }) {
   const { tasks, setTasks } = useTasks();
+  const { user } = useContext(authContext);
   const [modalData, setModalData] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Todo');
   useEffect(() => {
@@ -45,11 +47,25 @@ function AddTask({
                     onSubmit={(e) => {
                       e.preventDefault();
                       const formData = new FormData(e.target);
-                      const data = Object.fromEntries(formData);
+                      const dataObj = Object.fromEntries(formData);
                       const date = new Date().toISOString().slice(0, 10);
-
+                      const data = {
+                        ...dataObj,
+                        date,
+                        email: user.email,
+                      };
+                      if (isEdit) {
+                        axios.put(
+                          `https://backend14.vercel.app/PUT/tasks/${modalData.title._id}`,
+                          data
+                        );
+                        // console.log(modalData.title._id);
+                      }
                       if (!isEdit && data) {
-                        axios.post('http://localhost:3000/POST/tasks', data);
+                        axios.post(
+                          'https://backend14.vercel.app/POST/tasks',
+                          data
+                        );
                         console.log(data);
                       }
                       console.log(tasks);
@@ -67,7 +83,7 @@ function AddTask({
                       <input
                         type='text'
                         name='title'
-                        defaultValue={modalData?.title || ''}
+                        defaultValue={modalData?.title?.title || ''}
                         id='name'
                         onChange={(e) => {
                           if (e.target.value.length > 50) {
