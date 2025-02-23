@@ -9,14 +9,13 @@ function AuthProvider({ children }) {
   const [user, setUser] = React.useState(undefined);
   function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((res) => setUser(res.user))
-      .then(() => {
-        toast.success('Login successful');
-      })
-      .catch(() => {
-        toast.error('Login failed');
-      });
+    signInWithPopup(auth, provider).then((res) => setUser(res.user));
+    // .then(() => {
+    //   toast.success('Login successful');
+    // })
+    // .catch(() => {
+    //   toast.error('Login failed');
+    // });
   }
 
   useEffect(() => {

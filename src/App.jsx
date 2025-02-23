@@ -41,7 +41,7 @@ function App() {
     console.log(tasks);
   }, [tasks]);
   useEffect(() => {
-    if (user == null) navigate('/');
+    if (user == null) navigate('/auth');
   }, [user]);
 
   return (
