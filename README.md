@@ -1,6 +1,4 @@
-Here's a shorter README focusing only on the frontend while mentioning the backend tech stack briefly:  
 
----
 
 # **Task-Manage**  
 
