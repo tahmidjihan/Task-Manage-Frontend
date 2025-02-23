@@ -8,9 +8,9 @@ import axios from 'axios';
 function Category({ categoryTitle, className }) {
   const { tasks, setTasks, refetch } = useTasks();
 
-  useEffect(() => {
-    console.log('Tasks updated:', tasks);
-  }, [tasks]);
+  // useEffect(() => {
+  //   console.log('Tasks updated:', tasks);
+  // }, [tasks]);
 
   // You can use a separate Task component, but I'm just rendering it directly here.
   return (
@@ -29,16 +29,15 @@ function Category({ categoryTitle, className }) {
           </div>
         </div>
         <hr />
-        <Droppable droppableId={categoryTitle}>
+        <Droppable droppableId={categoryTitle} key={categoryTitle}>
           {(provided) => (
             <fieldset
-              key={categoryTitle}
               className='p-4 bg-base-100 border border-base-300 rounded-box w-64'
               ref={provided.innerRef}
               {...provided.droppableProps}>
               <legend className='fieldset-legend'>Tasks</legend>
               {tasks[categoryTitle]?.map((task, index) => (
-                <Draggable key={task.id} draggableId={task.title} index={index}>
+                <Draggable key={task.id} draggableId={task._id} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef}

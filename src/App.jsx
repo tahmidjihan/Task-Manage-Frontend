@@ -4,48 +4,37 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import useTasks from './tasks';
 import { authContext } from './AuthProvider';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 function App() {
   const { user } = useContext(authContext);
   const navigate = useNavigate();
-  const { tasks, setTasks } = useTasks();
-  const [dummyState, setDummyState] = useState(false);
+  const { tasks, refetch } = useTasks();
 
   function handleDragEnd(result) {
     // If dropped outside of a droppable area, return early
     if (!result.destination) return;
-
+    const newTasks = { ...tasks };
     const { source, destination } = result;
-    const sourceCategory = source.droppableId; // Category where the task is coming from
-    const destinationCategory = destination.droppableId; // Category where the task is being dropped
-
-    // Clone the tasks arrays to avoid direct mutation
-    const sourceTasks = [...tasks[sourceCategory]]; // Copy tasks from the source category
-    const destinationTasks = [...tasks[destinationCategory]]; // Copy tasks from the destination category
-
-    // Remove the task from the source array
-    const [movedTask] = sourceTasks.splice(source.index, 1);
-
-    // Add the task to the destination category (or reorder within the same category)
-    if (sourceCategory !== destinationCategory) {
-      // Move task to the new category
-      destinationTasks.splice(destination.index, 0, movedTask);
-    } else {
-      // Reorder tasks within the same category
-      sourceTasks.splice(destination.index, 0, movedTask);
+    const sourceCategory = source.droppableId;
+    const destinationCategory = destination.droppableId;
+    console.log(result);
+    console.log(sourceCategory, destinationCategory);
+    console.log(result.source.index, result.destination.index);
+    const index = result.source.index;
+    // console.log(index);
+    const newTask = {
+      ...tasks[sourceCategory][index],
+      category: destinationCategory,
+    };
+    delete newTask._id;
+    const id = tasks[sourceCategory][index]._id;
+    if (tasks[sourceCategory][index] !== newTask) {
+      console.log(newTask);
+      axios
+        .put(`https://backend14.vercel.app/PUT/tasks/${id}`, newTask)
+        .then(() => refetch());
     }
-    setDummyState((prev) => !prev);
-
-    // Update the state to trigger re-render with the modified tasks
-    setTasks((prevTasks) => ({
-      ...prevTasks,
-      [sourceCategory]:
-        sourceCategory !== destinationCategory ? sourceTasks : [...sourceTasks],
-      [destinationCategory]:
-        destinationCategory !== sourceCategory
-          ? destinationTasks
-          : [...destinationTasks],
-    }));
   }
 
   useEffect(() => {
