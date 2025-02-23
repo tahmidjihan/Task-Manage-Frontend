@@ -11,7 +11,7 @@ function AddTask({
   description,
   category = '',
 }) {
-  const { tasks, setTasks } = useTasks();
+  const { tasks, refetch } = useTasks();
   const { user } = useContext(authContext);
   const [modalData, setModalData] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Todo');
@@ -55,18 +55,19 @@ function AddTask({
                         email: user.email,
                       };
                       if (isEdit) {
-                        axios.put(
-                          `https://backend14.vercel.app/PUT/tasks/${modalData.title._id}`,
-                          data
-                        );
+                        axios
+                          .put(
+                            `https://backend14.vercel.app/PUT/tasks/${modalData.title._id}`,
+                            data
+                          )
+                          .then(() => refetch());
                         // console.log(modalData.title._id);
                       }
                       if (!isEdit && data) {
-                        axios.post(
-                          'https://backend14.vercel.app/POST/tasks',
-                          data
-                        );
-                        console.log(data);
+                        axios
+                          .post('https://backend14.vercel.app/POST/tasks', data)
+                          .then(() => refetch());
+                        // console.log(data);
                       }
                       console.log(tasks);
                       setTimeout(() => {

@@ -3,9 +3,11 @@ import Category from './components/Category';
 import { DragDropContext } from '@hello-pangea/dnd';
 import useTasks from './tasks';
 import { authContext } from './AuthProvider';
+import { useNavigate } from 'react-router';
 
 function App() {
   const { user } = useContext(authContext);
+  const navigate = useNavigate();
   const { tasks, setTasks } = useTasks();
   const [dummyState, setDummyState] = useState(false);
 
@@ -49,6 +51,9 @@ function App() {
   useEffect(() => {
     console.log(tasks);
   }, [tasks]);
+  useEffect(() => {
+    if (user == null) navigate('/');
+  }, [user]);
 
   return (
     <>

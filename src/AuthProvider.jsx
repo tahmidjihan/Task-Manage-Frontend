@@ -6,7 +6,7 @@ import axios from 'axios';
 export const authContext = createContext();
 
 function AuthProvider({ children }) {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(undefined);
   function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -25,6 +25,8 @@ function AuthProvider({ children }) {
         setUser(user);
         if (user) {
           axios.put('https://backend14.vercel.app/users', user);
+        } else {
+          setUser(null);
         }
       },
       [user]

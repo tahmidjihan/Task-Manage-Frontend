@@ -6,7 +6,7 @@ import AddTask from './addTask';
 import axios from 'axios';
 
 function Category({ categoryTitle, className }) {
-  const { tasks, setTasks } = useTasks();
+  const { tasks, setTasks, refetch } = useTasks();
 
   useEffect(() => {
     console.log('Tasks updated:', tasks);
@@ -32,6 +32,7 @@ function Category({ categoryTitle, className }) {
         <Droppable droppableId={categoryTitle}>
           {(provided) => (
             <fieldset
+              key={categoryTitle}
               className='p-4 bg-base-100 border border-base-300 rounded-box w-64'
               ref={provided.innerRef}
               {...provided.droppableProps}>
@@ -58,9 +59,13 @@ function Category({ categoryTitle, className }) {
                           </AddTask>
                           <button
                             onClick={() => {
-                              axios.delete(
-                                `https://backend14.vercel.app/DELETE/tasks/${task._id}`
-                              );
+                              axios
+                                .delete(
+                                  `https://backend14.vercel.app/DELETE/tasks/${task._id}`
+                                )
+                                .then(() => {
+                                  refetch();
+                                });
                             }}
                             className='btn btn-error btn-xs'>
                             Delete

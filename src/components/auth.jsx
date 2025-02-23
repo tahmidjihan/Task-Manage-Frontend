@@ -1,8 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { authContext } from '../AuthProvider';
+import { useNavigate } from 'react-router';
 
 function Auth() {
-  const { loginWithGoogle } = useContext(authContext);
+  const { loginWithGoogle, user } = useContext(authContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user]);
   return (
     <>
       <div className='h-screen bg-base-200 w-screen flex flex-col items-center justify-center align-middle'>
